@@ -60,6 +60,8 @@ The reward function will work following these criteria :
 
 A string of 40 (16+24) int. First 16 indexes are spaces, last 24 indexes are walls
 
+![wall-indexes](https://user-images.githubusercontent.com/1528493/124257075-4655bc80-db2c-11eb-9774-86340027642b.png)
+
 ```
 0000000000000000000000000000000000000000 # Blank map
 
@@ -67,3 +69,5 @@ A string of 40 (16+24) int. First 16 indexes are spaces, last 24 indexes are wal
 
 1000000002000003000010111001010110101110 # Map in screenshot
 ```
+
+![map](https://user-images.githubusercontent.com/1528493/124257068-45bd2600-db2c-11eb-9223-3cc1bb62ab89.png)

@@ -71,3 +71,13 @@ A string of 40 (16+24) int. First 16 indexes are spaces, last 24 indexes are wal
 ```
 
 ![map](https://user-images.githubusercontent.com/1528493/124257068-45bd2600-db2c-11eb-9223-3cc1bb62ab89.png)
+
+## Project structure
+
+### Environment class
+
+Represent the map with which the agent will interact. It provide 3 public methods :
+
+- reward(state, action) : the direct reward associated to an action in a certain state
+- curatedActions(state) : the curated action list from a state
+- updateState(state, action) : the new state from a state and an action

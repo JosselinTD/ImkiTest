@@ -45,6 +45,7 @@ There will be a function to return a curated action list to avoid illegal action
 
 The reward function will work following these criteria :
 
+- Create a room : +1 point
 - Set maximum distance between rooms : +1 point for each case between rooms when placing them
 - Connect two rooms : +5 points for achieving a path between two rooms not already connected
 - Random path between rooms : +0 points for breaking a wall
@@ -65,9 +66,9 @@ A string of 40 (16+24) int. First 16 indexes are spaces, last 24 indexes are wal
 ```
 0000000000000000000000000000000000000000 # Blank map
 
-0000000000000000111111111111111111111111 # Full wall map
+0000000000000000444444444444444444444444 # Full wall map
 
-1000000002000003000010111001010110101110 # Map in screenshot
+1000000002000003000040444004040440404440 # Map in screenshot
 ```
 
 ![map](https://user-images.githubusercontent.com/1528493/124257068-45bd2600-db2c-11eb-9223-3cc1bb62ab89.png)

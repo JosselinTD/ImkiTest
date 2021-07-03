@@ -48,6 +48,7 @@ class QAgent:
   def selectAction(self, state):
     curatedActions = self.environment.curatedActions(state)
     randomAction = self.epsilon > random.uniform(0,1)
+
     if randomAction: return random.choice(curatedActions)
     return self.getBestAction(state)
 
@@ -84,7 +85,6 @@ class QAgent:
 
     values = list(actionsDict.values())
     actions = list(actionsDict.keys())
-
     if len(actions) == 0: return random.choice(self.environment.curatedActions(state))
     
     maxValue = max(values)

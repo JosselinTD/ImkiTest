@@ -135,3 +135,33 @@ class Environment:
       adjacentSpaces = self.listAllAdjacentSpaces(state, state.index('1') + 1)
       return state.index('2') + 1 in adjacentSpaces and state.index('3') + 1 in adjacentSpaces
     return False
+
+  def drawMap(self, state): # quick function to draw map in console
+    spaces = state[:(self.mapSize * self.mapSize)]
+    walls = state[(self.mapSize * self.mapSize):]
+
+    print('.'.join(('-' * (self.mapSize * 2 + 1)).split()))
+    for row in range(self.mapSize):
+      # Space row
+      rowString = '|'
+      rowSpaces = spaces[self.mapSize * row:self.mapSize * row + self.mapSize].replace('0', ' ')
+      rowWalls = walls[self.mapSize * row * 2 - row:self.mapSize * row * 2 - row + self.mapSize - 1].replace('0', ' ').replace('4', '|')
+      for i, space in enumerate(rowSpaces):
+        rowString += space
+        if i != len(rowSpaces) - 1:
+          rowString += rowWalls[i]
+      rowString += '|'
+      print(rowString)
+
+      # Wall row
+      if row < self.mapSize - 1:
+        rowString = '|'
+        rowWalls = walls[self.mapSize * row * 2 - row + self.mapSize - 1:self.mapSize * row * 2 - row + self.mapSize - 1 + self.mapSize].replace('0', ' ').replace('4', '-')
+        for i, wall in enumerate(rowWalls):
+          rowString += wall
+          if i != len(rowWalls) - 1:
+            rowString += ' '
+        rowString += '|'
+        print(rowString)
+    print('.'.join(('-' * (self.mapSize * 2 + 1)).split()))
+    print(state)

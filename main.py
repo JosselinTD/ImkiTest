@@ -4,6 +4,5 @@ from qagent import QAgent
 environment = Environment(4)
 qagent = QAgent(environment, 0.1, 0.8, 0.1)
 
-qagent.train(1000)
-# print(qagent.qMap)
+qagent.train(500)
 environment.drawMap(qagent.generate())

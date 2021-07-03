@@ -2,6 +2,10 @@ import math
 import re
 
 class Environment:
+  addRoomReward = 1
+  roomDistanceReward = 20
+  connectRoomReward = 5
+
   def __init__(self, mapSize):
     self.mapSize = mapSize
     self.allActions = []
@@ -20,19 +24,19 @@ class Environment:
     index = self.extractIndex(action, 'W' in action)
     reward = 0
     if 'W' not in action:
-      if 'SP' in action or 'TP' in action or 'EP' in action: reward += 1 # 1 point when adding a room
+      if 'SP' in action or 'TP' in action or 'EP' in action: reward += self.addRoomReward # 1 point when adding a room
       if '1' in state:
         spColumn = state.index('1') % self.mapSize
         spRow = int(math.ceil(float(state.index('1')) / self.mapSize))
         actionColumn = index % self.mapSize
         actionRow = int(float(index) / self.mapSize)
-        reward += abs(spColumn - actionColumn) + abs(spRow - actionRow) * 3 # +3 point for each case between starting room and other room
+        reward += abs(spColumn - actionColumn) + abs(spRow - actionRow) * self.roomDistanceReward # +3 point for each case between starting room and other room
     else:
       if '1' in state and ('2' in state or '3' in state):
         previouslyAdjacentSpaces = self.listAllAdjacentSpaces(state, state.index('1') + 1)
         newState = self.updateState(state, action)
         newlyAdjacentSpaces = self.listAllAdjacentSpaces(newState, newState.index('1') + 1)
-        if ('2' in state and state.index('2') + 1 not in previouslyAdjacentSpaces and state.index('2') + 1 in newlyAdjacentSpaces) or ('3' in state and state.index('3') + 1 not in previouslyAdjacentSpaces and state.index('3') + 1 in newlyAdjacentSpaces): reward += 5 # +5 point when connecting starting room to another room
+        if ('2' in state and state.index('2') + 1 not in previouslyAdjacentSpaces and state.index('2') + 1 in newlyAdjacentSpaces) or ('3' in state and state.index('3') + 1 not in previouslyAdjacentSpaces and state.index('3') + 1 in newlyAdjacentSpaces): reward += self.connectRoomReward # +5 point when connecting starting room to another room
     return reward
 
   def curatedActions(self, state):
@@ -78,6 +82,12 @@ class Environment:
 
     # Already breaked walls
     if state[index] == '0': return False
+
+    # Wall of space adjacent to start
+    if '1' not in state: return False # No wall action while start not setted
+    adjacentSpaces = self.listAllAdjacentSpaces(state, state.index('1') + 1)
+    spacesOfWall = self.getWallSpaces(index)
+    if len([x for x in adjacentSpaces if x in spacesOfWall]) == 0: False
 
     return True
 

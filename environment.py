@@ -26,7 +26,7 @@ class Environment:
         spRow = int(math.ceil(float(state.index('1')) / self.mapSize))
         actionColumn = index % self.mapSize
         actionRow = int(float(index) / self.mapSize)
-        reward += abs(spColumn - actionColumn) + abs(spRow - actionRow) # +1 point for each case between starting room and other room
+        reward += abs(spColumn - actionColumn) + abs(spRow - actionRow) * 3 # +3 point for each case between starting room and other room
     else:
       if '1' in state and ('2' in state or '3' in state):
         previouslyAdjacentSpaces = self.listAllAdjacentSpaces(state, state.index('1') + 1)

@@ -1,4 +1,4 @@
-import random
+import random, sys
 
 class QAgent:
   def __init__(self, environment, alpha, gamma, epsilon):
@@ -9,12 +9,23 @@ class QAgent:
     self.qMap = {}
 
   def train(self, iterations):
+    # Print loading bar, from https://stackoverflow.com/a/3002100/2332573
+    sys.stdout.write('\r')
+    sys.stdout.write("[%-100s] %d%%" % ('='*0, 0))
+    sys.stdout.flush()
+
     for i in range(iterations):
       state = self.environment.getStartingState()
       while not self.environment.isRoomsConnected(state):
         nextAction = self.selectAction(state)
         state = self.updateQValue(state, nextAction)
       self.cleanQMap()
+      # Update loading bar
+      sys.stdout.write('\r')
+      percent = int(i * 100 / iterations)
+      sys.stdout.write("[%-100s] %d%%" % ('=' * percent, percent))
+      sys.stdout.flush()
+    print()
 
   def generate(self):
     state = self.environment.getStartingState()

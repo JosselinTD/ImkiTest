@@ -139,5 +139,8 @@ class TestEnvironmentClass(unittest.TestCase):
     self.assertEqual(self.environment.updateState(self.blankMap, 'EP4'), '0003000000000000000000000000000000000000')
     self.assertEqual(self.environment.updateState(self.fullWallMap, 'W4'), '0000000000000000444044444444444444444444')
 
+  def test_getStartingState(self):
+    self.assertEqual(self.environment.getStartingState(), self.fullWallMap)
+
 if __name__ == '__main__':
   unittest.main()

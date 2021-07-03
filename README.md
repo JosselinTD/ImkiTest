@@ -82,3 +82,17 @@ Represent the map with which the agent will interact. It provide 3 public method
 - reward(state, action) : the direct reward associated to an action in a certain state
 - curatedActions(state) : the curated action list from a state
 - updateState(state, action) : the new state from a state and an action
+
+### QAgent class
+
+Represent the agent using the Q-Learning algorithm, based on a "Q-Map" associating (state, action) -> value. It provide 2 methods :
+
+- train : train the algorithm by repetedly generating map and improving the Q-Map
+- generate : generate a map without updating the Q-Map
+
+Ideally, two other methods should be available :
+
+- save : export the Q-Map in a file
+- load : import the Q-Map from a file
+
+The Q-Map is a dict of dict. First level will have state as keys, and second level will have actions as key with value = cumulated value. By default, every value will be 0

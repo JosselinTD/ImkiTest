@@ -6,12 +6,12 @@ class Environment:
     self.mapSize = mapSize
     self.allActions = []
     for i in range(self.mapSize * self.mapSize):
-      self.allActions.append('SP' + str(i))
-      self.allActions.append('TP' + str(i))
-      self.allActions.append('EP' + str(i))
+      self.allActions.append('SP' + str(i+1))
+      self.allActions.append('TP' + str(i+1))
+      self.allActions.append('EP' + str(i+1))
 
     for i in range((self.mapSize - 1) * self.mapSize * 2):
-      self.allActions.append('W' + str(i))
+      self.allActions.append('W' + str(i+1))
 
   def reward(self, state, action):
     if not self.isActionLegal(state, action):
@@ -51,6 +51,12 @@ class Environment:
     state = state[:index] + newValue + state[index + 1:]
 
     return state
+
+  def getStartingState(self):
+    spaces = '0' * (self.mapSize * self.mapSize)
+    walls = '4' * ((self.mapSize - 1) * self.mapSize * 2)
+
+    return spaces + walls
 
   def isActionLegal(self, state, action):
     index = self.extractIndex(action, 'W' in action)

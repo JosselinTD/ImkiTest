@@ -30,7 +30,7 @@ class QAgent:
   def generate(self):
     state = self.environment.getStartingState()
     while not self.environment.isRoomsConnected(state):
-      nextAction = self.getBestAction(state)
+      nextAction = self.selectAction(state)
       state = self.environment.updateState(state, nextAction)
     return state
 

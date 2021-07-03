@@ -3,7 +3,7 @@ import re
 
 class Environment:
   addRoomReward = 1
-  roomDistanceReward = 20
+  roomDistanceReward = 1
   connectRoomReward = 5
 
   def __init__(self, mapSize):
@@ -30,7 +30,7 @@ class Environment:
         spRow = int(math.ceil(float(state.index('1')) / self.mapSize))
         actionColumn = index % self.mapSize
         actionRow = int(float(index) / self.mapSize)
-        reward += abs(spColumn - actionColumn) + abs(spRow - actionRow) * self.roomDistanceReward # +3 point for each case between starting room and other room
+        reward += abs(spColumn - actionColumn) + abs(spRow - actionRow) * self.roomDistanceReward # +1 point for each case between starting room and other room
     else:
       if '1' in state and ('2' in state or '3' in state):
         previouslyAdjacentSpaces = self.listAllAdjacentSpaces(state, state.index('1') + 1)
@@ -128,11 +128,11 @@ class Environment:
     wallNumber = wallIndex - self.mapSize * self.mapSize
     isAVerticalWall = self.isAVerticalWall(wallNumber - 1)
     if not isAVerticalWall:
-      upperSpaceIndex = wallNumber - (math.ceil(wallNumber / (self.mapSize * 2 - 1)) * 3)
+      upperSpaceIndex = wallNumber - (math.ceil(wallNumber / (self.mapSize * 2 - 1)) * (self.mapSize - 1))
       lowerSpaceIndex = upperSpaceIndex + self.mapSize
       return [int(math.ceil(upperSpaceIndex)), int(math.ceil(lowerSpaceIndex))]
     else:
-      rightSpaceIndex = wallNumber - (int(wallNumber / (self.mapSize * 2 - 1)) * 3)
+      rightSpaceIndex = wallNumber - (int(wallNumber / (self.mapSize * 2 - 1)) * (self.mapSize - 1))
       leftSpaceIndex = rightSpaceIndex + 1
 
       return [int(math.ceil(rightSpaceIndex)), int(math.ceil(leftSpaceIndex))]

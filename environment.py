@@ -129,3 +129,9 @@ class Environment:
 
   def isAVerticalWall(self, wallNumber):
     return (wallNumber % ((self.mapSize * 2) - 1)) < (self.mapSize - 1)
+
+  def isRoomsConnected(self, state):
+    if '1' in state and '2' in state and '3' in state:
+      adjacentSpaces = self.listAllAdjacentSpaces(state, state.index('1') + 1)
+      return state.index('2') + 1 in adjacentSpaces and state.index('3') + 1 in adjacentSpaces
+    return False

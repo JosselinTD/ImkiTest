@@ -1,25 +1,24 @@
 import random
 
 class QAgent:
-  def __init__(self, environment, alpha, gamma, epsilon, iterationLife):
+  def __init__(self, environment, alpha, gamma, epsilon):
     self.environment = environment # Environment instance
     self.alpha = alpha # learning rate
     self.gamma = gamma # Importance of future actions
     self.epsilon = epsilon # ration of random actions over existing ones
-    self.iterationLife = iterationLife # for training, how many actions allowed max
     self.qMap = {}
 
   def train(self, iterations):
     for i in range(iterations):
       state = self.environment.getStartingState()
-      for j in range(self.iterationLife):
+      while not self.environment.isRoomsConnected(state):
         nextAction = self.selectAction(state)
         state = self.updateQValue(state, nextAction)
       self.cleanQMap()
 
   def generate(self):
     state = self.environment.getStartingState()
-    for j in range(self.iterationLife):
+    while not self.environment.isRoomsConnected(state):
       nextAction = self.getBestAction(state)
       state = self.environment.updateState(state, nextAction)
     return state

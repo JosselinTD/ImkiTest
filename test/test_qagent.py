@@ -15,14 +15,13 @@ class TestQAgentClass(unittest.TestCase):
 
   def setUp(self):
     self.environment = Environment(4)
-    self.qagent = QAgent(self.environment, 0.1, 0.8, 0.1, 25)
+    self.qagent = QAgent(self.environment, 0.1, 0.8, 0.1)
 
   def test_initialisation(self):
     self.assertEqual(self.qagent.environment, self.environment)
     self.assertEqual(self.qagent.alpha, 0.1)
     self.assertEqual(self.qagent.gamma, 0.8)
     self.assertEqual(self.qagent.epsilon, 0.1)
-    self.assertEqual(self.qagent.iterationLife, 25)
 
   def test_getQState(self):
     self.qagent.updateQValue(self.connectingMap, 'W6')

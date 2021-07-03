@@ -141,6 +141,14 @@ class TestEnvironmentClass(unittest.TestCase):
 
   def test_getStartingState(self):
     self.assertEqual(self.environment.getStartingState(), self.fullWallMap)
+  
+  def test_isRoomsConnected(self):
+    self.assertEqual(self.environment.isRoomsConnected(self.blankMap), False)
+    self.assertEqual(self.environment.isRoomsConnected(self.fullWallMap), False)
+    self.assertEqual(self.environment.isRoomsConnected(self.endMap), True)
+    self.assertEqual(self.environment.isRoomsConnected(self.spMap), False)
+    self.assertEqual(self.environment.isRoomsConnected(self.connectingMap), False)
+
 
 if __name__ == '__main__':
   unittest.main()

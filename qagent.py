@@ -1,4 +1,4 @@
-import random, sys
+import random, sys, json
 
 class QAgent:
   def __init__(self, environment, alpha, gamma, epsilon):
@@ -33,6 +33,17 @@ class QAgent:
       nextAction = self.selectAction(state)
       state = self.environment.updateState(state, nextAction)
     return state
+
+  def save(self):
+    with open(f"{self.environment.mapSize}-{self.alpha}-{self.gamma}-{self.epsilon}.json", "w") as write_file:
+      json.dump(self.qMap, write_file, indent=2)
+
+  def load(self):
+    try:
+      with open(f"{self.environment.mapSize}-{self.alpha}-{self.gamma}-{self.epsilon}.json") as json_file:
+        self.qMap = json.load(json_file)
+    except:
+      print('Model not loadable, qMap set to default')
 
   def selectAction(self, state):
     curatedActions = self.environment.curatedActions(state)

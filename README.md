@@ -43,6 +43,10 @@ All test should pass. They are available on the test/ folder.
 
 (For an unknown reason, unittest doesn't work for me on windows powershell but work fine on the Anaconda shell. Everything should be fine on other OS)
 
+### Alternative branch
+
+A more dirigist version is available in the branch alternative_wall_action_listing. The only difference is in the listing of available action on walls : only walls of spaces connected to the EP can be destroyed. It avoid creating path not accessible by user.
+
 ## Bias
 
 The map will begin with no rooms and walls everywhere.

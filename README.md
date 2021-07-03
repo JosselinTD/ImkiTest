@@ -10,8 +10,6 @@ The algorithm must place rooms and create corridor leading to the rooms.
 
 ## Bias
 
-It's not precised in the initial statement but we will train our algorithm to avoid create "white space" : there can be only corridor and no big empty space of 2x2 cases or more. It's for avoiding creating a completely empty space with only the 3 rooms and no corridor.
-
 The map will begin with no rooms and walls everywhere.
 
 The map will be define in 2 parts :
@@ -41,7 +39,7 @@ The available actions (A) will be as follow :
   ...
 - Break wall 24
 
-There will be a function to return a curated action list to avoid illegal action (creating an already existing room, destroying an already destroyed wall, creating a room in an already occupied space, creating a 2x2 or more white space)
+There will be a function to return a curated action list to avoid illegal action (creating an already existing room, destroying an already destroyed wall, creating a room in an already occupied space)
 
 The reward function will work following these criteria :
 

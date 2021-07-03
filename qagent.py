@@ -14,13 +14,14 @@ class QAgent:
       state = self.environment.getStartingState()
       for j in range(self.iterationLife):
         nextAction = self.selectAction(state)
-        state = self.updateQValue(state, action)
+        state = self.updateQValue(state, nextAction)
+      self.cleanQMap()
 
   def generate(self):
     state = self.environment.getStartingState()
     for j in range(self.iterationLife):
       nextAction = self.getBestAction(state)
-      state = self.environment.updateState(state, action)
+      state = self.environment.updateState(state, nextAction)
     return state
 
   def selectAction(self, state):
@@ -30,14 +31,12 @@ class QAgent:
     return self.getBestAction(state)
 
   def getQValue(self, state, action):
-    return self.getQState(state).get(action)
+    return self.getQState(state).get(action) or 0
 
   def getQState(self, state):
     qDict = self.qMap.get(state)
     if not qDict:
       qDict = {}
-      for action in self.environment.curatedActions(state):
-        qDict[action] = 0
       self.qMap[state] = qDict
     return qDict
 
@@ -53,9 +52,25 @@ class QAgent:
     # Alternative qValue formula
     # newQvalue = (1 - self.alpha) * currentQValue + self.alpha * (reward + self.gamma * (self.getQSValue(nextState, bestNextAction) - currentQValue))
 
-    self.qMap[state][action] = newQvalue
+    if newQvalue > 0: self.qMap[state][action] = newQvalue
+    elif self.qMap[state].get(action): del self.qMap[state][action]
+    
+    # if newQvalue > 0: print(state, action, newQvalue)
     return nextState
 
   def getBestAction(self, state):
-    actions = self.getQState(state)
-    return max(actions, key=actions.get)
+    actionsDict = self.getQState(state)
+
+    values = list(actionsDict.values())
+    actions = list(actionsDict.keys())
+
+    if len(actions) == 0: return random.choice(self.environment.curatedActions(state))
+    
+    maxValue = max(values)
+
+    actionsIndexesWithMaxValues = [i for i in range(len(values)) if values[i] == maxValue]
+
+    return actions[random.choice(actionsIndexesWithMaxValues)]
+
+  def cleanQMap(self):
+    self.qMap = {k:v for k,v in self.qMap.items() if bool(v)}

@@ -61,6 +61,7 @@ class Environment:
   def isActionLegal(self, state, action):
     index = self.extractIndex(action, 'W' in action)
     wallNumber = index - self.mapSize * self.mapSize
+
     # Index issues
     if 'W' not in action and index > self.mapSize * self.mapSize: return False
     if 'W' in action and wallNumber > (self.mapSize - 1) * self.mapSize * 2: return False
@@ -77,72 +78,6 @@ class Environment:
 
     # Already breaked walls
     if state[index] == '0': return False
-    # 2x2 empty room
-    isAVerticalWall = self.isAVerticalWall(wallNumber)
-    if isAVerticalWall:
-      upperWallsToCheck = [
-        # Upper wall
-        index - (self.mapSize * 2 - 1),
-        # Diagonal upper left
-        index - self.mapSize,
-        # Diagonal upper right
-        index - self.mapSize + 1
-      ]
-      lowerWallsToCheck = [
-        # Lower wall
-        index + (self.mapSize * 2 - 1),
-        # Diagonal lower right
-        index + self.mapSize,
-        # Diagonal lower left
-        index + self.mapSize - 1
-      ]
-      if wallNumber > self.mapSize: # Check upper walls only if map exist there
-        allDestroyed = True
-        for i in upperWallsToCheck:
-          if state[i] == '4':
-            allDestroyed = False
-            break
-        if allDestroyed: return False
-
-      if wallNumber < ((self.mapSize - 1) * self.mapSize * 2) - (self.mapSize - 1): # Check lower walls only if map exist there
-        allDestroyed = True
-        for i in lowerWallsToCheck:
-          if state[i] == '4':
-            allDestroyed = False
-            break
-        if allDestroyed: return False
-    else:
-      leftWallsToCheck = [
-        # Upper wall
-        index - self.mapSize,
-        # Left wall
-        index - 1,
-        # Lower wall
-        index + self.mapSize - 1
-      ]
-      rightWallsToCheck = [
-        # Upper wall
-        index - self.mapSize - 1,
-        # Right wall
-        index + 1,
-        # Lower wall
-        index + self.mapSize
-      ]
-      if wallNumber % (self.mapSize * 2 - 1) != self.mapSize: # Check left walls only if map exist there
-        allDestroyed = True
-        for i in leftWallsToCheck:
-          if state[i] == '4':
-            allDestroyed = False
-            break
-        if allDestroyed: return False
-
-      if wallNumber % (self.mapSize * 2 - 1) != 0: # Check right walls only if map exist there
-        allDestroyed = True
-        for i in rightWallsToCheck:
-          if state[i] == '4':
-            allDestroyed = False
-            break
-        if allDestroyed: return False
 
     return True
 

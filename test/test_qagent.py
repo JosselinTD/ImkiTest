@@ -12,7 +12,7 @@ class TestQAgentClass(unittest.TestCase):
   spMap = '1000000000000000000000000000000000000000'
 
   connectingMap = '1000002000000000004444444444444444444444'
-
+  
   def setUp(self):
     self.environment = Environment(4)
     self.qagent = QAgent(self.environment, 0.1, 0.8, 0.1)

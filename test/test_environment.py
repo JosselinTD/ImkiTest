@@ -19,37 +19,51 @@ class TestEnvironmentClass(unittest.TestCase):
     self.assertEqual(self.environment.mapSize, 4, 'incorrect map size')
     self.assertEqual(len(self.environment.allActions), 16 * 3 + 24, 'incorrect all actions size')
 
+  def test_extractIndex(self):
+    self.assertEqual(self.environment.extractIndex('EP1'), 0)
+    self.assertEqual(self.environment.extractIndex('EP10'), 9)
+    self.assertEqual(self.environment.extractIndex('EP15'), 14)
+    self.assertEqual(self.environment.extractIndex('EP16'), 15)
+    self.assertEqual(self.environment.extractIndex('W1'), 16)
+    self.assertEqual(self.environment.extractIndex('W8'), 23)
+    self.assertEqual(self.environment.extractIndex('W23'), 38)
+    self.assertEqual(self.environment.extractIndex('W24'), 39)
+  
+  def test_wallNumberToIndex(self):
+    self.assertEqual(self.environment.wallNumberToIndex(1), 16)
+    self.assertEqual(self.environment.wallNumberToIndex(24), 39)
+
   def test_isAVerticalWall(self):
-    self.assertEqual(self.environment.isAVerticalWall(0), True)
     self.assertEqual(self.environment.isAVerticalWall(1), True)
     self.assertEqual(self.environment.isAVerticalWall(2), True)
+    self.assertEqual(self.environment.isAVerticalWall(3), True)
 
-    self.assertEqual(self.environment.isAVerticalWall(3), False)
     self.assertEqual(self.environment.isAVerticalWall(4), False)
     self.assertEqual(self.environment.isAVerticalWall(5), False)
     self.assertEqual(self.environment.isAVerticalWall(6), False)
+    self.assertEqual(self.environment.isAVerticalWall(7), False)
 
-    self.assertEqual(self.environment.isAVerticalWall(7), True)
     self.assertEqual(self.environment.isAVerticalWall(8), True)
     self.assertEqual(self.environment.isAVerticalWall(9), True)
+    self.assertEqual(self.environment.isAVerticalWall(10), True)
 
-    self.assertEqual(self.environment.isAVerticalWall(10), False)
     self.assertEqual(self.environment.isAVerticalWall(11), False)
     self.assertEqual(self.environment.isAVerticalWall(12), False)
     self.assertEqual(self.environment.isAVerticalWall(13), False)
+    self.assertEqual(self.environment.isAVerticalWall(14), False)
 
-    self.assertEqual(self.environment.isAVerticalWall(14), True)
     self.assertEqual(self.environment.isAVerticalWall(15), True)
     self.assertEqual(self.environment.isAVerticalWall(16), True)
+    self.assertEqual(self.environment.isAVerticalWall(17), True)
 
-    self.assertEqual(self.environment.isAVerticalWall(17), False)
     self.assertEqual(self.environment.isAVerticalWall(18), False)
     self.assertEqual(self.environment.isAVerticalWall(19), False)
     self.assertEqual(self.environment.isAVerticalWall(20), False)
+    self.assertEqual(self.environment.isAVerticalWall(21), False)
 
-    self.assertEqual(self.environment.isAVerticalWall(21), True)
     self.assertEqual(self.environment.isAVerticalWall(22), True)
     self.assertEqual(self.environment.isAVerticalWall(23), True)
+    self.assertEqual(self.environment.isAVerticalWall(24), True)
   
   def test_illegalAction(self):
     self.assertEqual(self.environment.isActionLegal(self.blankMap, 'W200'), False)
@@ -72,6 +86,12 @@ class TestEnvironmentClass(unittest.TestCase):
     self.assertEqual(self.environment.isActionLegal(self.fullWallMap, 'W21'), True)
     self.assertEqual(self.environment.isActionLegal(self.blankMap, 'W24'), False)
     self.assertEqual(self.environment.isActionLegal(self.fullWallMap, 'W24'), True)
+
+    self.assertEqual(self.environment.isActionLegal(self.endMap, 'W7'), False)
+    self.assertEqual(self.environment.isActionLegal(self.endMap, 'W22'), True)
+    self.assertEqual(self.environment.isActionLegal('1000000002000003000040444004040440004440', 'W22'), False)
+    self.assertEqual(self.environment.isActionLegal('1000000002000003004040044004040440004440', 'W3'), False)
+    self.assertEqual(self.environment.isActionLegal('1000000002000003000040444004040444004040', 'W18'), False)
 
   def test_getSpaceWalls(self):
     self.assertEqual(self.environment.getSpaceWalls(6), [5+16,8+16,9+16,12+16])
@@ -148,6 +168,9 @@ class TestEnvironmentClass(unittest.TestCase):
     self.assertEqual(self.environment.isRoomsConnected(self.endMap), True)
     self.assertEqual(self.environment.isRoomsConnected(self.spMap), False)
     self.assertEqual(self.environment.isRoomsConnected(self.connectingMap), False)
+
+    self.assertEqual(self.environment.isRoomsConnected('2000000000300100400404000004400404004000'), False)
+    self.assertEqual(self.environment.isRoomsConnected('2000000000300100000404000004400404004000'), True)
 
 
 if __name__ == '__main__':

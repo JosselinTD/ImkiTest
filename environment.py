@@ -21,11 +21,11 @@ class Environment:
     if not self.isActionLegal(state, action):
       raise AttributeError(f"Action {action} not allowed in state {state}")
     
-    index = self.extractIndex(action, 'W' in action)
+    index = self.extractIndex(action)
     reward = 0
     if 'W' not in action:
-      if 'SP' in action or 'TP' in action or 'EP' in action: reward += self.addRoomReward # 1 point when adding a room
-      if '1' in state:
+      reward += self.addRoomReward # 1 point when adding a room
+      if '1' in state: # if SP already present, we can check for room connection
         spColumn = state.index('1') % self.mapSize
         spRow = int(math.ceil(float(state.index('1')) / self.mapSize))
         actionColumn = index % self.mapSize
@@ -46,7 +46,7 @@ class Environment:
     if not self.isActionLegal(state, action):
       raise AttributeError(f"Action {action} not allowed in state {state}")
 
-    index = self.extractIndex(action, 'W' in action)
+    index = self.extractIndex(action)
     newValue = '0'
     if 'SP' in action: newValue = '1'
     if 'TP' in action: newValue = '2'
@@ -63,12 +63,12 @@ class Environment:
     return spaces + walls
 
   def isActionLegal(self, state, action):
-    index = self.extractIndex(action, 'W' in action)
-    wallNumber = index - self.mapSize * self.mapSize
+    index = self.extractIndex(action)
+    wallNumber = index - self.mapSize * self.mapSize + 1
 
     # Index issues
     if 'W' not in action and index > self.mapSize * self.mapSize: return False
-    if 'W' in action and wallNumber > (self.mapSize - 1) * self.mapSize * 2: return False
+    if 'W' in action and wallNumber > (self.mapSize - 1) * self.mapSize * 2 + 1: return False
     # Already existing rooms
     if '1' in state and 'SP' in action: return False
     if '2' in state and 'TP' in action: return False
@@ -89,12 +89,42 @@ class Environment:
     spacesOfWall = self.getWallSpaces(index)
     if len([x for x in adjacentSpaces if x in spacesOfWall]) == 0: False
 
+    # Creating a big room, not a corridor
+    if self.isAVerticalWall(wallNumber):
+      topWallsNumber = [
+        wallNumber - (2 * self.mapSize - 1),
+        wallNumber - self.mapSize,
+        wallNumber - (self.mapSize - 1)
+      ]
+      bottomWallsNumber = [
+        wallNumber + (self.mapSize - 1),
+        wallNumber + self.mapSize,
+        wallNumber + (2 * self.mapSize - 1)
+      ]
+      if topWallsNumber[0] > 0 and len([w for w in topWallsNumber if state[self.wallNumberToIndex(w)] == '4']) == 0: return False
+      if bottomWallsNumber[0] <= (self.mapSize - 1) * self.mapSize * 2 and len([w for w in bottomWallsNumber if state[self.wallNumberToIndex(w)] == '4']) == 0: return False
+    else:
+      leftWallsNumber = [
+        wallNumber - self.mapSize,
+        wallNumber - 1,
+        wallNumber + (self.mapSize - 1)
+      ]
+      rightWallsNumber = [
+        wallNumber - (self.mapSize - 1),
+        wallNumber + 1,
+        wallNumber + self.mapSize
+      ]
+      if wallNumber % (self.mapSize * 2 - 1) != self.mapSize and len([w for w in leftWallsNumber if state[self.wallNumberToIndex(w)] == '4']) == 0: return False
+      if rightWallsNumber[0] % (self.mapSize * 2 - 1) != self.mapSize and len([w for w in rightWallsNumber if state[self.wallNumberToIndex(w)] == '4']) == 0: return False
     return True
 
-  def extractIndex(self, action, isWall):
-    shift = -1
-    if isWall : shift = self.mapSize * self.mapSize - 1
-    return int(re.search(r'\d+', action).group()) + shift
+  def extractIndex(self, action):
+    index = int(re.search(r'\d+', action).group()) - 1
+    if 'W' in action : index += self.mapSize * self.mapSize
+    return index
+
+  def wallNumberToIndex(self, wallNumber):
+    return wallNumber + self.mapSize * self.mapSize - 1
 
   def listAllAdjacentSpaces(self, state, spaceIndex):
     spacesToAnalyze = [spaceIndex]
@@ -125,8 +155,8 @@ class Environment:
     return walls
 
   def getWallSpaces(self, wallIndex):
-    wallNumber = wallIndex - self.mapSize * self.mapSize
-    isAVerticalWall = self.isAVerticalWall(wallNumber - 1)
+    wallNumber = wallIndex - (self.mapSize * self.mapSize)
+    isAVerticalWall = self.isAVerticalWall(wallNumber)
     if not isAVerticalWall:
       upperSpaceIndex = wallNumber - (math.ceil(wallNumber / (self.mapSize * 2 - 1)) * (self.mapSize - 1))
       lowerSpaceIndex = upperSpaceIndex + self.mapSize
@@ -138,7 +168,7 @@ class Environment:
       return [int(math.ceil(rightSpaceIndex)), int(math.ceil(leftSpaceIndex))]
 
   def isAVerticalWall(self, wallNumber):
-    return (wallNumber % ((self.mapSize * 2) - 1)) < (self.mapSize - 1)
+    return ((wallNumber - 1) % ((self.mapSize * 2) - 1)) < (self.mapSize - 1)
 
   def isRoomsConnected(self, state):
     if '1' in state and '2' in state and '3' in state:

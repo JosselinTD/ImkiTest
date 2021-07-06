@@ -77,7 +77,6 @@ class QAgent:
     if newQvalue > 0: self.qMap[state][action] = newQvalue
     elif self.qMap[state].get(action): del self.qMap[state][action]
     
-    # if newQvalue > 0: print(state, action, newQvalue)
     return nextState
 
   def getBestAction(self, state):
@@ -85,7 +84,10 @@ class QAgent:
 
     values = list(actionsDict.values())
     actions = list(actionsDict.keys())
-    if len(actions) == 0: return random.choice(self.environment.curatedActions(state))
+    curatedActions = self.environment.curatedActions(state)
+    if len(actions) == 0:
+      if len(curatedActions) != 0: return random.choice(self.environment.curatedActions(state))
+      return None
     
     maxValue = max(values)
 

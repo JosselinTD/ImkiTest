@@ -78,7 +78,7 @@ The available actions (A) will be as follow :
   ...
 - Break wall 24
 
-There will be a function to return a curated action list to avoid illegal action (creating an already existing room, destroying an already destroyed wall, creating a room in an already occupied space)
+There will be a function to return a curated action list to avoid illegal action (creating an already existing room, destroying an already destroyed wall, creating a room in an already occupied space, destroying a wall creating a 2x2 empty space)
 
 The reward function will work following these criteria :
 
@@ -86,13 +86,6 @@ The reward function will work following these criteria :
 - Set maximum distance between rooms : +1 point for each case between rooms when placing them
 - Connect two rooms : +5 points for achieving a path between two rooms not already connected
 - Random path between rooms : +0 points for breaking a wall
-
-## Technical needs
-
-- A reward function
-- A curate action function
-- A map representation
-- A Q-Function : (state, action) -> value based on a (state, action) -> value list with value = 0 when no info
 
 ### Map representation
 
@@ -114,21 +107,21 @@ A string of 40 (16+24) int. First 16 indexes are spaces, last 24 indexes are wal
 
 ### Environment class
 
-Represent the map with which the agent will interact. It provide 3 public methods :
+Represent the map with which the agent will interact. It provide 3 methods to help training the agent (and others utility methods) :
 
 - reward(state, action) : the direct reward associated to an action in a certain state
 - curatedActions(state) : the curated action list from a state
-- updateState(state, action) : the new state from a state and an action
+- updateState(state, action) : return the new state from a state and an action
 
 An environment must be initialised with 1 value :
 
-- The map size : an int indicating the square size of the map
+- The map size : an `int` indicating the square size of the map
 
-The environment also have 3 variable to easily change the rewards associated with each action. It can't be changed at initialisation and must be change programmatically.
+The environment also have 3 variable to easily change the rewards associated with each action. It can't be changed at initialisation and must be changed programmatically.
 
 ### QAgent class
 
-Represent the agent using the Q-Learning algorithm, based on a "Q-Map" associating (state, action) -> value. It provide 4 methods :
+Represent the agent using the Q-Learning algorithm, based on a "Q-Map" associating (state, action) -> value. It provide 4 methods (and others utility methods) :
 
 - train : train the algorithm by repetedly generating map and improving the Q-Map
 - generate : generate a map without updating the Q-Map
@@ -138,8 +131,10 @@ Represent the agent using the Q-Learning algorithm, based on a "Q-Map" associati
 A QAgent must be initialised with 4 values :
 
 - The environment instance in which the agent operate
-- The alpha parameter : the learning rate of the agent (between 0 and 1). At 0, the agent learn nothing. At 1, the agent remember only the last information
+- The alpha parameter : the learning rate of the agent (between 0 and 1). At 0, the agent learn nothing. At 1, the agent grant as much importance to new information as old one. An alternative version of the QValue formula exist : at 1, only the last information is remembered and the historicity is forgotten
 - The gamma parameter : the actualisation factor (between 0 and 1). At 0, only the current reward matter, at 1 futur rewards matter as much as current reward
 - The epsilon parameter : the ratio of random decision. At 0, the agent choose only based on it's Q-Map, at 1 it choose only random actions
+
+#### Q-Map structure
 
 The Q-Map is a dict of dict. First level will have state as keys, and second level will have actions as key with value = cumulated value. By default, every value will be 0

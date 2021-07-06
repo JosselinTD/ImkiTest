@@ -77,7 +77,6 @@ class QAgent:
     if newQvalue > 0: self.qMap[state][action] = newQvalue
     elif self.qMap[state].get(action): del self.qMap[state][action]
     
-    # if newQvalue > 0: print(state, action, newQvalue)
     return nextState
 
   def getBestAction(self, state):

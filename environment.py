@@ -24,8 +24,8 @@ class Environment:
     index = self.extractIndex(action)
     reward = 0
     if 'W' not in action:
-      if 'SP' in action or 'TP' in action or 'EP' in action: reward += self.addRoomReward # 1 point when adding a room
-      if '1' in state:
+      reward += self.addRoomReward # 1 point when adding a room
+      if '1' in state: # if SP already present, we can check for room connection
         spColumn = state.index('1') % self.mapSize
         spRow = int(math.ceil(float(state.index('1')) / self.mapSize))
         actionColumn = index % self.mapSize
